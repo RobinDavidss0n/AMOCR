@@ -1,0 +1,2 @@
+# AMOCR
+Ex bös
