@@ -29,7 +29,7 @@ class CameraConfig {
     camera_config_t config;
 
 public:
-
+  
     CameraConfig(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount);
     ~CameraConfig();
     

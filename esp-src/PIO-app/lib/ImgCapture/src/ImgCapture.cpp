@@ -3,7 +3,7 @@
 ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount) {
 
     fb = NULL;
-    camConfig = CameraConfig(pixFormat, frameSize, jpgQuality, fbCount);
+    camConfig = new CameraConfig(pixFormat, frameSize, jpgQuality, fbCount);
 
     if (!psramFound()) {
         frameSize = FRAMESIZE_SVGA;
@@ -11,11 +11,11 @@ ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQual
         fbCount = 1;
     }
 
-    config = camConfig.getCamConfig();
+    config = camConfig->getCamConfig();
 }
 
 ImgCapture::~ImgCapture() {
-
+    delete camConfig;
 }
 
 bool ImgCapture::initCamera() {
@@ -49,7 +49,7 @@ bool ImgCapture::saveImage() {
     m_pictureNumber = EEPROM.read(0) + 1;
 
     // Path where new picture will be saved in SD Card
-    String fileFormat = camConfig.getImgFormat();
+    String fileFormat = camConfig->getImgFormat();
     m_imgPath = "/picture" + String(m_pictureNumber) + fileFormat;
 
     fs::FS &fs = SD_MMC; 

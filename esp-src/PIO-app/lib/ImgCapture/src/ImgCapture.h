@@ -14,7 +14,7 @@ class ImgCapture {
     String m_imgPath;
     int m_pictureNumber;
     
-    CameraConfig camConfig;
+    CameraConfig* camConfig = nullptr;
     camera_config_t config;
     camera_fb_t* fb;
 

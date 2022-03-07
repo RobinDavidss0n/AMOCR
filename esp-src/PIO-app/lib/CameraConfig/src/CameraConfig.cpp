@@ -1,6 +1,7 @@
 #include "CameraConfig.h"
 
 CameraConfig::CameraConfig(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount) {
+    
     // Standard configuration:
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
@@ -30,6 +31,10 @@ CameraConfig::CameraConfig(pixformat_t pixFormat, framesize_t frameSize, int jpg
 
     // Save customizable configs:
     pixelFormat = pixFormat;
+}
+
+CameraConfig::~CameraConfig() {
+
 }
 
 camera_config_t CameraConfig::getCamConfig() { 
