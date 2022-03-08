@@ -28,9 +28,6 @@ CameraConfig::CameraConfig(pixformat_t pixFormat, framesize_t frameSize, int jpg
     config.frame_size = frameSize;
     config.jpeg_quality = jpgQuality;
     config.fb_count = fbCount;
-
-    // Save customizable configs:
-    pixelFormat = pixFormat;
 }
 
 CameraConfig::~CameraConfig() {
@@ -43,7 +40,7 @@ camera_config_t CameraConfig::getCamConfig() {
 
 String CameraConfig::getImgFormat() {
        
-    switch (pixelFormat) {
+    switch (config.pixel_format) {
         case PIXFORMAT_RAW:
             return ".raw";
         

@@ -7,7 +7,7 @@ void setup() {
  
   Serial.begin(115200);
 
-  ImgCapture imgCapture(PIXFORMAT_RAW, FRAMESIZE_UXGA);
+  ImgCapture imgCapture(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
   String filePath = imgCapture.captureImage();
 
   Serial.println(filePath);

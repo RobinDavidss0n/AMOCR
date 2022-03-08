@@ -1,10 +1,10 @@
 #include "esp_camera.h"
 #include "WString.h"
 
-// define the number of bytes you want to access
+/**************************** Define the number of bytes to access ****************************/
 #define EEPROM_SIZE 1
 
-// Pin definition for CAMERA_MODEL_AI_THINKER
+/************************* Pin definition for CAMERA_MODEL_AI_THINKER *************************/
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -22,18 +22,17 @@
 #define VSYNC_GPIO_NUM    25
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
+/**********************************************************************************************/
 
 class CameraConfig {
 
-    pixformat_t pixelFormat;
+private:
     camera_config_t config;
 
 public:
-  
     CameraConfig(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount);
     ~CameraConfig();
     
     camera_config_t getCamConfig();
     String getImgFormat();
-
 };

@@ -11,6 +11,7 @@
 
 class ImgCapture {
 
+private:
     String m_imgPath;
     int m_pictureNumber;
     
@@ -21,10 +22,6 @@ class ImgCapture {
     bool initCamera();
     bool initSdCard();
     bool saveImage();
-
-
-    // Inkludera även variabler för upplösning, färgdjup osv, vad som nu går att ställa in
-    // på kameran inför att ett foto tas?
 
 public:
     ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality = 10, size_t fbCount = 2);
