@@ -18,7 +18,7 @@ public:
     ~ErrorHandler();
 
     
-    bool handelError(String error);
+    bool handleError(String error);
 
 };
 

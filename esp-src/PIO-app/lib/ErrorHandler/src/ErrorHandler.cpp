@@ -27,9 +27,9 @@ bool ErrorHandler::saveErrorToSdCard() {
     else {
 
         size_t errorLength = error.length();
-        uint8_t* errorStringBuffert = error.c_str();
+        const uint8_t* errorStringBuffer = reinterpret_cast<const uint8_t*>(&error[0]);
         
-        file.write(,); // payload (image), payload length
+        file.write(errorStringBuffer, errorLength); // payload (image), payload length
         Serial.printf("Saved error to path: %s\n", m_errorPath.c_str());
         file.close();
         return true;
@@ -37,7 +37,7 @@ bool ErrorHandler::saveErrorToSdCard() {
 
 }
 
-bool ErrorHandler::handelError(String _error) {
+bool ErrorHandler::handleError(String _error) {
     error =_error;
 
     if(saveErrorToSdCard()){
