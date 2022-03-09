@@ -7,8 +7,9 @@
 class ErrorHandler{
 
 private:
-    String error;
-    String errorFileName;
+    String m_errorDescription;
+    esp_err_t m_error;
+    String m_errorFileName;
 
     bool saveErrorToSdCard();
 
@@ -18,7 +19,7 @@ public:
     ~ErrorHandler();
 
     
-    bool handleError(String error);
+    bool handleError(String errorDesc, esp_err_t error);
 
 };
 
