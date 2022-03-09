@@ -9,7 +9,7 @@ class ErrorHandler{
 private:
     String m_errorDescription;
     String m_error;
-    char* m_errorFileName;
+    String m_errorFileName;
 
     bool saveErrorToSdCard();
 
@@ -19,7 +19,7 @@ public:
     ~ErrorHandler();
 
     
-    bool handleError(String errorDesc, esp_err_t error, char* errorFileName);
+    bool handleError(String errorDesc, esp_err_t error, String errorFileName);
 
 };
 
