@@ -8,18 +8,18 @@ class ErrorHandler{
 
 private:
     String m_errorDescription;
-    esp_err_t m_error;
-    String m_errorFileName;
+    String m_error;
+    char* m_errorFileName;
 
     bool saveErrorToSdCard();
 
 public:
 
-    ErrorHandler(/* args */);
+    ErrorHandler();
     ~ErrorHandler();
 
     
-    bool handleError(String errorDesc, esp_err_t error);
+    bool handleError(String errorDesc, esp_err_t error, char* errorFileName);
 
 };
 

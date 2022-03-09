@@ -20,7 +20,6 @@ private:
     camera_fb_t* fb;
 
     bool initCamera();
-    bool initSdCard();
     bool saveImage();
 
 public:

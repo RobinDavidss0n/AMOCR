@@ -12,12 +12,11 @@ ErrorHandler::~ErrorHandler() {
 bool ErrorHandler::saveErrorToSdCard() {
 
     // Path where error will be saved in SD Card
-    String m_errorPath = "/errors/" + m_errorFileName + ".txt";
+    char* m_errorPath = ("/errors/%s.txt", m_errorFileName);
 
-    fs::FS &fs = SD_MMC; 
-    Serial.printf("Error file name: %s\n", m_errorPath.c_str());
+    fs::FS &fs = SD_MMC;
 
-    File file = fs.open(m_errorPath.c_str(), FILE_WRITE);
+    File file = fs.open(m_errorPath, FILE_WRITE);
 
     if(!file){
         Serial.println("Failed to open file in writing mode");
@@ -26,20 +25,21 @@ bool ErrorHandler::saveErrorToSdCard() {
     } 
     else {
 
-        size_t errorLength = m_errorDescription.length();
-        const uint8_t* errorStringBuffer = reinterpret_cast<const uint8_t*>(&m_errorDescription[0]);
-        
-        file.write(errorStringBuffer, errorLength); // payload (image), payload length
-        Serial.printf("Saved error to path: %s\n", m_errorPath.c_str());
-        file.close();
-        return true;
+        if(!file.print("Error description: "+m_errorDescription+"\nError: "+m_error)){
+            Serial.printf("Saved error to path: %s\n", m_errorPath);
+            file.close();
+            return true;
+        } else {
+            file.close();
+            return false;
+        }
     }
-
 }
 
-bool ErrorHandler::handleError(String errorDesc, esp_err_t error) {
+bool ErrorHandler::handleError(String errorDesc, esp_err_t error, char* errorFileName) {
     m_errorDescription = errorDesc;
-    m_error = error;
+    m_error = esp_err_to_name(error);
+    m_errorFileName = errorFileName;
 
     if(saveErrorToSdCard()){
         Serial.printf("Error saved to SD card:)");

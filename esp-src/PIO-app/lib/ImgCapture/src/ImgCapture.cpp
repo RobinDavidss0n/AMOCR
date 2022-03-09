@@ -27,22 +27,6 @@ bool ImgCapture::initCamera() {
     return true;
 }
 
-bool ImgCapture::initSdCard() {
-    //Serial.println("Starting SD Card");
-    if(!SD_MMC.begin()){
-        Serial.println("SD Card Mount Failed");
-        return false;
-    }
-
-    uint8_t cardType = SD_MMC.cardType();
-    if(cardType == CARD_NONE){
-        Serial.println("No SD Card attached");
-        return false;
-    }
-
-    return true;
-}
-
 bool ImgCapture::saveImage() {
     // initialize EEPROM with predefined size
     EEPROM.begin(EEPROM_SIZE);
@@ -75,8 +59,7 @@ String ImgCapture::captureImage() {
     
     //TODO: Ta hand om false-returer från dessa två:
     initCamera();
-    initSdCard();
-
+    
     // Take Picture with Camera
     fb = esp_camera_fb_get();  
     
