@@ -1,8 +1,9 @@
-#include <EEPROM.h>            // read and write from flash memory
 #include "FS.h"                // SD Card ESP32
 #include "SD_MMC.h"            // SD Card ESP32
-#include <iostream>            // For making text file
-#include <fstream>             // For making text file
+#include "SdCardStorage.h"
+
+#ifndef ERRORHANDLER_H
+#define ERRORHANDLER_H
 
 class ErrorHandler{
 
@@ -23,5 +24,4 @@ public:
 
 };
 
-
-
+#endif

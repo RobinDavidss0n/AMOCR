@@ -24,6 +24,9 @@
 #define PCLK_GPIO_NUM     22
 /**********************************************************************************************/
 
+#ifndef CAMERACONFIG_H
+#define CAMERACONFIG_H
+
 class CameraConfig {
 
 private:
@@ -36,3 +39,5 @@ public:
     camera_config_t getCamConfig();
     String getImgFormat();
 };
+
+#endif

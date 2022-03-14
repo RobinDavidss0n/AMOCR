@@ -3,8 +3,10 @@
 #include "soc/soc.h"           // Disable brownour problems
 #include "soc/rtc_cntl_reg.h"  // Disable brownour problems
 #include "driver/rtc_io.h"
-#include <EEPROM.h>            // read and write from flash memory
 #include "CameraConfig.h"
+#include "InternalStorage.h"
+#include "ErrorHandler.h"
+#include "SdCardStorage.h"
 
 #ifndef IMGCAPTURE_H
 #define IMGCAPTURE_H
@@ -13,7 +15,6 @@ class ImgCapture {
 
 private:
     String m_imgPath;
-    int m_pictureNumber;
     
     CameraConfig* camConfig = nullptr;
     camera_config_t config;
