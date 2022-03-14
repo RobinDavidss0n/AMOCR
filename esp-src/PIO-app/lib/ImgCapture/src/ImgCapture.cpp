@@ -1,11 +1,16 @@
 #include "ImgCapture.h"
+#include "ErrorHandler.h"
 
-ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount) {
+ErrorHandler errorHandler;
+
+ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount)
+{
 
     fb = NULL;
     camConfig = new CameraConfig(pixFormat, frameSize, jpgQuality, fbCount);
 
-    if (!psramFound()) {
+    if (!psramFound())
+    {
         frameSize = FRAMESIZE_SVGA;
         jpgQuality = 12;
         fbCount = 1;
@@ -14,20 +19,25 @@ ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQual
     config = camConfig->getCamConfig();
 }
 
-ImgCapture::~ImgCapture() {
+ImgCapture::~ImgCapture()
+{
     delete camConfig;
 }
 
-bool ImgCapture::initCamera() {
+bool ImgCapture::initCamera()
+{
     esp_err_t err = esp_camera_init(&config);
-    if (err != ESP_OK) {
-        Serial.printf("Camera init failed with error 0x%x", err);
+    if (err != ESP_OK)
+    {
+        errorHandler.handleError("Camera init failed", err, "Error file name");
+
         return false;
     }
     return true;
 }
 
-bool ImgCapture::saveImage() {
+bool ImgCapture::saveImage()
+{
     // initialize EEPROM with predefined size
     EEPROM.begin(EEPROM_SIZE);
     m_pictureNumber = EEPROM.read(0) + 1;
@@ -36,16 +46,18 @@ bool ImgCapture::saveImage() {
     String fileFormat = camConfig->getImgFormat();
     m_imgPath = "/picture" + String(m_pictureNumber) + fileFormat;
 
-    fs::FS &fs = SD_MMC; 
+    fs::FS &fs = SD_MMC;
     Serial.printf("Picture file name: %s\n", m_imgPath.c_str());
 
     File file = fs.open(m_imgPath.c_str(), FILE_WRITE);
-    if(!file){
-        Serial.println("Failed to open file in writing mode");
+    if (!file)
+    {
+        errorHandler.handleError("Failed to open file in writing mode", NULL, "Error file name");
         file.close();
         return false;
-    } 
-    else {
+    }
+    else
+    {
         file.write(fb->buf, fb->len); // payload (image), payload length
         Serial.printf("Saved file to path: %s\n", m_imgPath.c_str());
         EEPROM.write(0, m_pictureNumber);
@@ -55,26 +67,29 @@ bool ImgCapture::saveImage() {
     }
 }
 
-String ImgCapture::captureImage() {
-    
-    //TODO: Ta hand om false-returer från dessa två:
-    initCamera();
-    
-    // Take Picture with Camera
-    fb = esp_camera_fb_get();  
-    
-    if(!fb) {
-        Serial.println("Camera capture failed");
-        return String("");
-    }
+String ImgCapture::captureImage()
+{
 
-    saveImage();
+    if (initCamera())
+    {
+        // Take Picture with Camera
+        fb = esp_camera_fb_get();
+
+        if (!fb)
+        {
+            errorHandler.handleError("Camera capture failed", NULL, "Error file name");
+            return String("");
+        }
+        saveImage();
+
+    }else
+    {
+        errorHandler.handleError("Camera init failed", NULL, "Error file name");
+    }
 
     // Turns off the ESP32-CAM white on-board LED (flash) connected to GPIO 4
     pinMode(4, OUTPUT);
     digitalWrite(4, LOW);
-    rtc_gpio_hold_en(GPIO_NUM_4);
 
     return m_imgPath;
-
 }

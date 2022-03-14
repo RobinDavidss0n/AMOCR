@@ -11,6 +11,8 @@ ErrorHandler::~ErrorHandler() {
 
 bool ErrorHandler::saveErrorToSdCard() {
 
+    Serial.printf("ErrorHandler -> Got error: %s\n", m_errorDescription);
+
     fs::FS &fs = SD_MMC;
 
     // Path where error will be saved in SD Card
@@ -25,6 +27,11 @@ bool ErrorHandler::saveErrorToSdCard() {
     } 
     else {
 
+        if (m_error == NULL)
+        {
+            m_error= " ";
+        }
+        
         if(!file.print("Error description: "+m_errorDescription+"\nError: "+m_error)){
             Serial.printf("Saved error to path: %s\n", errorPath);
             file.close();
@@ -42,8 +49,8 @@ bool ErrorHandler::handleError(String errorDesc, esp_err_t error, String errorFi
     m_errorFileName = errorFileName;
 
     if(saveErrorToSdCard()){
-        Serial.printf("Error saved to SD card:)");
+        Serial.printf("Error saved to SD card :)\n");
     } else {
-        Serial.printf("Error not saved to SD card :(");
+        Serial.printf("Error not saved to SD card :(\n");
     }
 }

@@ -11,35 +11,34 @@ void setup()
 
     pinMode(4, OUTPUT); // Set the pin as output
 
-    digitalWrite(4, LOW);  // Turn on flash
-
-    if(!SD_MMC.begin()){
-        Serial.println("SD Card Mount Failed");
-    }
-
-    uint8_t cardType = SD_MMC.cardType();
-    if(cardType == CARD_NONE){
-        Serial.println("No SD Card attached");
-    }
+    digitalWrite(4, LOW); // Turn on flash
 
     ErrorHandler errorHandler;
 
-    esp_err_t error = ESP_ERR_NOT_SUPPORTED;
+    if (!SD_MMC.begin())
+    {
+        errorHandler.handleError("SD Card Mount Failed", NULL, "Setup error");
+    }
+    else
+    {
+        uint8_t cardType = SD_MMC.cardType();
+        if (cardType == CARD_NONE)
+        {
+            errorHandler.handleError("No SD Card attached", NULL, "Setup error");
+        }
+    }
 
-    errorHandler.handleError("testar :)", error, "Error file name");
+    // ImgCapture imgCapture(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
+    // String filePath = imgCapture.captureImage();
 
-    //ImgCapture imgCapture(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
-    //String filePath = imgCapture.captureImage();
-
-    //Serial.println(filePath);
+    // Serial.println(filePath);
 
     digitalWrite(4, HIGH); // Turn off flash
 
-    delay(2000);
     Serial.println("Going to sleep now");
-    delay(2000);
+    rtc_gpio_hold_en(GPIO_NUM_4);
+    
     esp_deep_sleep_start();
-    Serial.println("This will never be printed");
 }
 
 void loop()
