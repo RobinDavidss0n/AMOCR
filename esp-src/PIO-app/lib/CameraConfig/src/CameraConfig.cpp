@@ -42,7 +42,7 @@ String CameraConfig::getImgFormat() {
        
     switch (config.pixel_format) {
         case PIXFORMAT_RAW:
-            return ".raw";
+            return ".bmp";
         
         case PIXFORMAT_JPEG:
             return ".jpg";
