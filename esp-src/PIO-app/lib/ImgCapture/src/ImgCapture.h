@@ -7,6 +7,7 @@
 #include "InternalStorage.h"
 #include "ErrorHandler.h"
 #include "SdCardStorage.h"
+#include "bitmap.h"
 
 #ifndef IMGCAPTURE_H
 #define IMGCAPTURE_H
@@ -22,6 +23,7 @@ private:
 
     bool initCamera();
     bool saveImage();
+    bool saveAsBitmap();
 
 public:
     ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality = 10, size_t fbCount = 2);

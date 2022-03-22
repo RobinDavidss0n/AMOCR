@@ -16,6 +16,7 @@ public:
 
     bool writeTxtFile(String path, String text);
     bool writeImageFile(String path, const uint8_t* buffer, size_t length);
+    bool writeBitmapFile(String path, const uint8_t* headerData, size_t headerDataLength, const uint8_t* pixelDatat, size_t pixelDatatLength);
 
 };
 

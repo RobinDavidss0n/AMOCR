@@ -38,6 +38,9 @@ public:
     
     camera_config_t getCamConfig();
     String getImgFormat();
+
+    size_t bytesPerPixel;
+
 };
 
 #endif

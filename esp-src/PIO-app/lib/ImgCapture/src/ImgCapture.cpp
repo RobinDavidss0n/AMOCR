@@ -1,4 +1,6 @@
 #include "ImgCapture.h"
+#include <string>
+#include <sstream>
 
 ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality, size_t fbCount)
 {
@@ -39,16 +41,48 @@ bool ImgCapture::saveImage()
 {
     // Path where new picture will be saved in SD Card
     String fileFormat = camConfig->getImgFormat();
+
+    if (fileFormat == ".bmp")
+    {
+        saveAsBitmap();
+    }
+    else
+    {
+        InternalStorage internalStorage;
+        m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + fileFormat;
+
+        internalStorage.updateImageNumber();
+
+        Serial.println("Picture file name: " + m_imgPath);
+
+        SdCardStorage sdStorage;
+
+        sdStorage.writeImageFile(m_imgPath, fb->buf, fb->len);
+    }
+}
+
+bool ImgCapture::saveAsBitmap()
+{
     InternalStorage internalStorage;
-    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + fileFormat;
+    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + ".bmp";
 
     internalStorage.updateImageNumber();
 
     Serial.println("Picture file name: " + m_imgPath);
 
+    Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
+
+    Serial.println("fb->width"+String(fb->width) +"fb->height: " + String(fb->height));
+
     SdCardStorage sdStorage;
 
-    sdStorage.writeImageFile(m_imgPath, fb->buf, fb->len);
+    for (int i = 0; i < bitmap.m_length; i++)
+    {
+        Serial.println("HeaderData[" + String(i) + "]: " + bitmap.m_bitmapHeaderPointer[i]);
+        sleep(0.1);
+    }
+
+    sdStorage.writeBitmapFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
 }
 
 String ImgCapture::captureImage()
@@ -59,7 +93,7 @@ String ImgCapture::captureImage()
 
     if (initCamera())
     {
-        pinMode(4, OUTPUT); // Set the pin as output
+        pinMode(4, OUTPUT);    // Set the pin as output
         digitalWrite(4, HIGH); // Turn on flash
 
         // Take Picture with Camera
@@ -73,10 +107,10 @@ String ImgCapture::captureImage()
         }
 
         digitalWrite(4, LOW); // Turn off flash
-        
-        saveImage();
 
-    }else
+        saveImage();
+    }
+    else
     {
         errorHandler.handleError("Camera init failed", NULL, "ErrorFile_" + internalStorage.getImageNumber());
         internalStorage.updateImageNumber();

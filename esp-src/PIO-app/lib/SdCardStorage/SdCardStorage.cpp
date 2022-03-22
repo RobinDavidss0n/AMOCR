@@ -56,8 +56,28 @@ bool SdCardStorage::writeImageFile(String path, const uint8_t* buffer, size_t le
     else
     {
         file.write(buffer, length); // payload (image), payload length
-        Serial.println("writeImageFile -> Saved image with path: " + path);
         file.close();
+        Serial.println("writeImageFile -> Saved image with path: " + path);
         return true;
     }
 }
+
+bool SdCardStorage::writeBitmapFile(String path, const uint8_t* headerData, size_t headerDataLength, const uint8_t* pixelDatat, size_t pixelDatatLength){
+    File file = m_fileStream.open(path.c_str(), FILE_WRITE);
+    if (!file)
+    {
+        Serial.println("writeBitmapFile ->Failed to open file in writing mode");
+        file.close();
+        return false;
+    }
+    else
+    {
+
+        file.write(headerData, headerDataLength);
+        file.write(pixelDatat, pixelDatatLength);
+        file.close();
+        Serial.println("writeBitmapFile -> Saved bitmap with path: " + path);
+        return true;
+    }
+}
+
