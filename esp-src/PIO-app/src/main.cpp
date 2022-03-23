@@ -11,7 +11,7 @@ void setup()
     //InternalStorage internalStorage;
     //internalStorage.resetImageNumber();
 
-    ImgCapture imgCapture(PIXFORMAT_RGB888, FRAMESIZE_UXGA);
+    ImgCapture imgCapture(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
     imgCapture.captureImage();
 
     Serial.println("Going to sleep now");

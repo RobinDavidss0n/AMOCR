@@ -15,6 +15,7 @@ public:
     ~SdCardStorage();
 
     bool writeTxtFile(String path, String text);
+    bool writeRawPixelDataToTxtFile(String path, const uint8_t* bitmapHeader, size_t bhLenght, const uint8_t* rawPixelData, size_t rpdLength);
     bool writeImageFile(String path, const uint8_t* buffer, size_t length);
     bool writeBitmapFile(String path, const uint8_t* headerData, size_t headerDataLength, const uint8_t* pixelDatat, size_t pixelDatatLength);
 

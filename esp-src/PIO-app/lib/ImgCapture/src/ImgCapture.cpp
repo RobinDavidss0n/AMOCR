@@ -44,7 +44,12 @@ bool ImgCapture::saveImage()
 
     if (fileFormat == ".bmp")
     {
-        saveAsBitmap();
+        //saveAsBitmap();
+        saveAsRawPixelData();
+    }
+    else if (fileFormat == ".txt")
+    {
+        saveAsRawPixelData();
     }
     else
     {
@@ -83,6 +88,25 @@ bool ImgCapture::saveAsBitmap()
     }
 
     sdStorage.writeBitmapFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
+}
+
+bool ImgCapture::saveAsRawPixelData()
+{
+    InternalStorage internalStorage;
+    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + camConfig->getImgFormat();
+
+    internalStorage.updateImageNumber();
+
+    Serial.println("Picture file name: " + m_imgPath);
+
+    Serial.println("fb->width: "+String(fb->width) +"\nfb->height: " + String(fb->height));
+
+    Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
+
+
+    SdCardStorage sdStorage;
+
+    sdStorage.writeRawPixelDataToTxtFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
 }
 
 String ImgCapture::captureImage()

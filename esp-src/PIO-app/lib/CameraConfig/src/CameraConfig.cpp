@@ -43,14 +43,14 @@ String CameraConfig::getImgFormat() {
     switch (config.pixel_format) {
         case PIXFORMAT_RGB888:
             bytesPerPixel = 3;
-            return ".bmp";
+            return ".txt";
         
         case PIXFORMAT_JPEG:
             return ".jpg";
 
         case PIXFORMAT_GRAYSCALE:
             bytesPerPixel = 1;
-            return ".bmp";
+            return ".bin";
 
         default:
             return ".error";

@@ -24,7 +24,7 @@ private:
     bool initCamera();
     bool saveImage();
     bool saveAsBitmap();
-
+    bool saveAsRawPixelData();
 public:
     ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality = 10, size_t fbCount = 2);
     ~ImgCapture();

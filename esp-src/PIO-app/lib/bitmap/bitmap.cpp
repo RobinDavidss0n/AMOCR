@@ -8,40 +8,40 @@ Bitmap::Bitmap(size_t width, size_t height, size_t pixelDataLength, int bytesPer
 
     createBitmapHeader(width, height, pixelDataLength, bytesPerPixel, paddingAmount);
 
-    if (paddingAmount > 0)
-    {
-        Serial.println("Bitmap-> Padding needed, ammount: " + paddingAmount);
-        insertPadding(rawPixelData, pixelDataLength, bytesPerPixel, paddingAmount, width, height);
-    }else
-    {
-        Serial.println("Bitmap-> Padding NOT needed.");
-    }
+    // if (paddingAmount > 0)
+    // {
+    //     Serial.println("Bitmap-> Padding needed, ammount: " + paddingAmount);
+    //     insertPadding(rawPixelData, pixelDataLength, bytesPerPixel, paddingAmount, width, height);
+    // }else
+    // {
+    //     Serial.println("Bitmap-> Padding NOT needed.");
+    // }
     
 }
 
 void Bitmap::insertPadding(const uint8_t *rawPixelData, size_t pixelDataLength, int bytesPerPixel, size_t paddingAmount, size_t width, size_t height)
 {
 
-    for (size_t index = 0; index < pixelDataLength; index++)
-    {
-        if ((index+1) % width != 0)
-        {
-            m_pixelDataWithPadding[index] = rawPixelData[index];
-        }
-        else
-        {
-            Serial.println("Bitmap->insertPadding-> On end of width with index:"+index);
+    // for (size_t index = 0; index < pixelDataLength; index++)
+    // {
+    //     if ((index+1) % width != 0)
+    //     {
+    //         m_pixelDataWithPadding[index] = rawPixelData[index];
+    //     }
+    //     else
+    //     {
+    //         Serial.println("Bitmap->insertPadding-> On end of width with index:"+index);
 
-            m_pixelDataWithPadding[index] = rawPixelData[index];
+    //         m_pixelDataWithPadding[index] = rawPixelData[index];
 
-            for (size_t i = 0; i < paddingAmount; i++)
-            {
-                Serial.println("Bitmap->insertPadding-> Adding padding on index:"+(index + 1 + i));
-                m_pixelDataWithPadding[index + 1 + i] = 0;
-            }
-            index += paddingAmount;
-        }
-    }
+    //         for (size_t i = 0; i < paddingAmount; i++)
+    //         {
+    //             Serial.println("Bitmap->insertPadding-> Adding padding on index:"+(index + 1 + i));
+    //             m_pixelDataWithPadding[index + 1 + i] = 0;
+    //         }
+    //         index += paddingAmount;
+    //     }
+    // }
 }
 
 void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, int paddingAmount)
@@ -52,7 +52,7 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
 
     const int fileSize = fileHeaderSize + informationHeaderSize + width * height * bytesPerPixel + pixelDataLength + paddingAmount * height;
 
-    m_pixelDataWithPadding[fileSize];
+    //m_pixelDataWithPadding[fileSize];
 
     uint8_t fileHeader[fileHeaderSize];
 

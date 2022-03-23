@@ -1,8 +1,7 @@
 #include "SdCardStorage.h"
 
-
-
-SdCardStorage::SdCardStorage(){
+SdCardStorage::SdCardStorage()
+{
 
     if (!SD_MMC.begin())
     {
@@ -18,33 +17,111 @@ SdCardStorage::SdCardStorage(){
     }
 }
 
-SdCardStorage::~SdCardStorage(){
-
+SdCardStorage::~SdCardStorage()
+{
 }
 
-
-bool SdCardStorage::writeTxtFile(String path, String text){
+bool SdCardStorage::writeTxtFile(String path, String text)
+{
     File file = m_fileStream.open(path, FILE_WRITE);
 
-    if(!file){
+    if (!file)
+    {
         Serial.println("writeTxtFile -> Failed to open file in writing mode");
         file.close();
         return false;
-    } 
-    else {
-        
-        if(!file.print(text)){
+    }
+    else
+    {
+
+        if (!file.print(text))
+        {
             Serial.println("writeTxtFile -> Saved file with path: " + path);
             file.close();
             return true;
-        } else {
+        }
+        else
+        {
+            Serial.println("writeTxtFile -> Failed to saved file");
             file.close();
             return false;
         }
     }
 }
 
-bool SdCardStorage::writeImageFile(String path, const uint8_t* buffer, size_t length){
+bool SdCardStorage::writeRawPixelDataToTxtFile(String path, const uint8_t *bitmapHeader, size_t bhLenght, const uint8_t *rawPixelData, size_t rpdLength)
+{
+    File file = m_fileStream.open(path, FILE_WRITE);
+
+    if (!file)
+    {
+        Serial.println("writeRawPixelDataToTxtFile -> Failed to open file in writing mode");
+        file.close();
+        return false;
+    }
+    else
+    {
+
+        file.write(bitmapHeader, bhLenght);
+        file.write(rawPixelData, rpdLength);
+
+        // for (size_t i = 0; i < bhLenght; i++)
+        // {
+
+        //     file.print(bitmapHeader[i]+";");
+        //     // if (file.print(bitmapHeader[i]))
+        //     // {
+        //     //     if (!file.print(";"))
+        //     //     {
+        //     //         Serial.println("writeRawPixelDataToTxtFile -> Failed to print bitmapHeader on index: " + i);
+        //     //         file.close();
+        //     //         return false;
+        //     //     }
+        //     // }
+        //     // else
+        //     // {
+        //     //     file.close();
+        //     //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print bitmapHeader on index: " + i);
+        //     //     return false;
+        //     // }
+        // }
+
+        // if (!file.print("#"))
+        // {
+        //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print devider beetween header and raw data.");
+        //     file.close();
+        //     return false;
+        // }
+
+        // for (size_t i = 0; i < rpdLength; i++)
+        // {
+
+        //     file.print(rawPixelData[i]+";");
+        //     // if (file.print(rawPixelData[i]+";"))
+        //     // {
+        //     //     if (!file.print(";"))
+        //     //     {
+        //     //         Serial.println("writeRawPixelDataToTxtFile -> Failed to print rawPixel data on index: " + i);
+        //     //         file.close();
+        //     //         return false;
+        //     //     }
+        //     // }
+        //     // else
+        //     // {
+        //     //     file.close();
+        //     //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print rawPixel data on index: " + i);
+        //     //     return false;
+        //     // }
+        // }
+
+        file.close();
+        Serial.println("writeRawPixelDataToTxtFile -> Saved pixel data to textfile with path: " + path);
+        return true;
+    }
+}
+
+bool SdCardStorage::writeImageFile(String path, const uint8_t *buffer, size_t length)
+{
 
     File file = m_fileStream.open(path.c_str(), FILE_WRITE);
     if (!file)
@@ -62,7 +139,8 @@ bool SdCardStorage::writeImageFile(String path, const uint8_t* buffer, size_t le
     }
 }
 
-bool SdCardStorage::writeBitmapFile(String path, const uint8_t* headerData, size_t headerDataLength, const uint8_t* pixelDatat, size_t pixelDatatLength){
+bool SdCardStorage::writeBitmapFile(String path, const uint8_t *headerData, size_t headerDataLength, const uint8_t *pixelDatat, size_t pixelDatatLength)
+{
     File file = m_fileStream.open(path.c_str(), FILE_WRITE);
     if (!file)
     {
@@ -80,4 +158,3 @@ bool SdCardStorage::writeBitmapFile(String path, const uint8_t* headerData, size
         return true;
     }
 }
-
