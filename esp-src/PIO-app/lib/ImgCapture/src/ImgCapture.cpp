@@ -37,78 +37,6 @@ bool ImgCapture::initCamera()
     return true;
 }
 
-bool ImgCapture::saveImage()
-{
-    // Path where new picture will be saved in SD Card
-    String fileFormat = camConfig->getImgFormat();
-
-    if (fileFormat == ".bmp")
-    {
-        //saveAsBitmap();
-        saveAsRawPixelData();
-    }
-    else if (fileFormat == ".txt")
-    {
-        saveAsRawPixelData();
-    }
-    else
-    {
-        InternalStorage internalStorage;
-        m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + fileFormat;
-
-        internalStorage.updateImageNumber();
-
-        Serial.println("Picture file name: " + m_imgPath);
-
-        SdCardStorage sdStorage;
-
-        sdStorage.writeImageFile(m_imgPath, fb->buf, fb->len);
-    }
-}
-
-bool ImgCapture::saveAsBitmap()
-{
-    InternalStorage internalStorage;
-    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + ".bmp";
-
-    internalStorage.updateImageNumber();
-
-    Serial.println("Picture file name: " + m_imgPath);
-
-    Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
-
-    Serial.println("fb->width"+String(fb->width) +"fb->height: " + String(fb->height));
-
-    SdCardStorage sdStorage;
-
-    for (int i = 0; i < bitmap.m_length; i++)
-    {
-        Serial.println("HeaderData[" + String(i) + "]: " + bitmap.m_bitmapHeaderPointer[i]);
-        sleep(0.1);
-    }
-
-    sdStorage.writeBitmapFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
-}
-
-bool ImgCapture::saveAsRawPixelData()
-{
-    InternalStorage internalStorage;
-    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + camConfig->getImgFormat();
-
-    internalStorage.updateImageNumber();
-
-    Serial.println("Picture file name: " + m_imgPath);
-
-    Serial.println("fb->width: "+String(fb->width) +"\nfb->height: " + String(fb->height));
-
-    Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
-
-
-    SdCardStorage sdStorage;
-
-    sdStorage.writeRawPixelDataToTxtFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
-}
-
 String ImgCapture::captureImage()
 {
 
@@ -140,9 +68,76 @@ String ImgCapture::captureImage()
         internalStorage.updateImageNumber();
     }
 
-    // Turns off the ESP32-CAM white on-board LED (flash) connected to GPIO 4
-    pinMode(4, OUTPUT);
-    digitalWrite(4, LOW);
-
     return m_imgPath;
+}
+
+bool ImgCapture::saveImage()
+{
+    // Path where new picture will be saved in SD Card
+    String fileFormat = camConfig->getImgFormat();
+
+    if (fileFormat == ".bmp")
+    {
+        //saveAsBitmap();
+        saveAsRawPixelData();
+    }
+    else if (fileFormat == ".txt")
+    {
+        saveAsRawPixelData();
+    }
+    else
+    {
+        InternalStorage internalStorage;
+        m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + fileFormat;
+
+        internalStorage.updateImageNumber();
+
+        Serial.println("Picture file name: " + m_imgPath);
+
+        SdCardStorage sdStorage;
+        sdStorage.writeImageFile(m_imgPath, fb->buf, fb->len);
+    }
+}
+
+bool ImgCapture::saveAsRawPixelData()
+{
+    InternalStorage internalStorage;
+    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + camConfig->getImgFormat();
+
+    internalStorage.updateImageNumber();
+
+    Serial.println("Picture file name: " + m_imgPath);
+    Serial.println("fb->width: "+String(fb->width) +"\nfb->height: " + String(fb->height));
+
+    //Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
+
+    SdCardStorage sdStorage;
+    sdStorage.writeRawPixelDataToBinFile(m_imgPath, fb->buf, fb->len);
+}
+
+
+//**********************************    NOT USED    **********************************
+
+bool ImgCapture::saveAsBitmap()
+{
+    InternalStorage internalStorage;
+    m_imgPath = "/picture" + String(internalStorage.getImageNumber()) + ".bmp";
+
+    internalStorage.updateImageNumber();
+
+    Serial.println("Picture file name: " + m_imgPath);
+
+    Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->bytesPerPixel, fb->buf);
+
+    Serial.println("fb->width"+String(fb->width) +"fb->height: " + String(fb->height));
+
+    SdCardStorage sdStorage;
+
+    for (int i = 0; i < bitmap.m_length; i++)
+    {
+        Serial.println("HeaderData[" + String(i) + "]: " + bitmap.m_bitmapHeaderPointer[i]);
+        sleep(0.1);
+    }
+
+    sdStorage.writeBitmapFile(m_imgPath, bitmap.m_bitmapHeaderPointer, bitmap.m_length, fb->buf, fb->len);
 }

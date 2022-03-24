@@ -55,4 +55,4 @@ String CameraConfig::getImgFormat() {
         default:
             return ".error";
     }
-}
+} 

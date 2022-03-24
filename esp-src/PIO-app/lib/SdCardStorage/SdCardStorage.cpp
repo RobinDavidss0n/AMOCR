@@ -49,76 +49,37 @@ bool SdCardStorage::writeTxtFile(String path, String text)
     }
 }
 
-bool SdCardStorage::writeRawPixelDataToTxtFile(String path, const uint8_t *bitmapHeader, size_t bhLenght, const uint8_t *rawPixelData, size_t rpdLength)
+bool SdCardStorage::writeRawPixelDataToBinFile(String path, const uint8_t *rawPixelData, size_t rpdLength)
 {
     File file = m_fileStream.open(path, FILE_WRITE);
 
     if (!file)
     {
-        Serial.println("writeRawPixelDataToTxtFile -> Failed to open file in writing mode");
+        Serial.println("writeRawPixelDataToBinFile -> Failed to open file in writing mode");
         file.close();
         return false;
     }
     else
     {
 
-        file.write(bitmapHeader, bhLenght);
-        file.write(rawPixelData, rpdLength);
-
-        // for (size_t i = 0; i < bhLenght; i++)
-        // {
-
-        //     file.print(bitmapHeader[i]+";");
-        //     // if (file.print(bitmapHeader[i]))
-        //     // {
-        //     //     if (!file.print(";"))
-        //     //     {
-        //     //         Serial.println("writeRawPixelDataToTxtFile -> Failed to print bitmapHeader on index: " + i);
-        //     //         file.close();
-        //     //         return false;
-        //     //     }
-        //     // }
-        //     // else
-        //     // {
-        //     //     file.close();
-        //     //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print bitmapHeader on index: " + i);
-        //     //     return false;
-        //     // }
-        // }
-
-        // if (!file.print("#"))
-        // {
-        //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print devider beetween header and raw data.");
-        //     file.close();
-        //     return false;
-        // }
-
-        // for (size_t i = 0; i < rpdLength; i++)
-        // {
-
-        //     file.print(rawPixelData[i]+";");
-        //     // if (file.print(rawPixelData[i]+";"))
-        //     // {
-        //     //     if (!file.print(";"))
-        //     //     {
-        //     //         Serial.println("writeRawPixelDataToTxtFile -> Failed to print rawPixel data on index: " + i);
-        //     //         file.close();
-        //     //         return false;
-        //     //     }
-        //     // }
-        //     // else
-        //     // {
-        //     //     file.close();
-        //     //     Serial.println("writeRawPixelDataToTxtFile -> Failed to print rawPixel data on index: " + i);
-        //     //     return false;
-        //     // }
-        // }
-
-        file.close();
-        Serial.println("writeRawPixelDataToTxtFile -> Saved pixel data to textfile with path: " + path);
-        return true;
+        if (file.write(rawPixelData, rpdLength))
+        {
+            file.close();
+            Serial.println("writeRawPixelDataToBinFile -> Saved pixel data to textfile with path: " + path);
+            return true;
+        }
+        else
+        {
+            file.close();
+            Serial.println("writeRawPixelDataToBinFile -> Failed to print rawPixel data.");
+            return false;
+        }
     }
 }
+
+
+
+//**********************************    NOT USED    **********************************
 
 bool SdCardStorage::writeImageFile(String path, const uint8_t *buffer, size_t length)
 {
@@ -150,7 +111,6 @@ bool SdCardStorage::writeBitmapFile(String path, const uint8_t *headerData, size
     }
     else
     {
-
         file.write(headerData, headerDataLength);
         file.write(pixelDatat, pixelDatatLength);
         file.close();

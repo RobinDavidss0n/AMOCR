@@ -19,7 +19,7 @@ public:
     size_t m_length = 54;
     uint8_t m_bitmapHeader[54];
     uint8_t* m_bitmapHeaderPointer;
-    //uint8_t m_pixelDataWithPadding[];
+    uint8_t m_pixelDataWithPadding[];
 
 };
 
