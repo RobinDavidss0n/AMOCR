@@ -11,8 +11,11 @@ void setup()
     //InternalStorage internalStorage;
     //internalStorage.resetImageNumber();
 
-    ImgCapture imgCapture(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
-    imgCapture.captureImage();
+    // ImgCapture imgCapture1(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
+    // imgCapture1.captureImage();
+
+    ImgCapture imgCapture2(PIXFORMAT_RGB888, FRAMESIZE_SVGA);
+    imgCapture2.captureImage();
 
     Serial.println("Going to sleep now");
     rtc_gpio_hold_en(GPIO_NUM_4);

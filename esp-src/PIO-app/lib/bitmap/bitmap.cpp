@@ -2,8 +2,7 @@
 
 Bitmap::Bitmap(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, const uint8_t *rawPixelData)
 {
-
-    const int paddingAmount = ((4 - (width * bytesPerPixel) % 4) % 4);
+    const int paddingAmount = ((4 - (int(width) * bytesPerPixel) % 4) % 4);
     unsigned char bmpPad[3] = {0,0,0};
 
     createBitmapHeader(width, height, pixelDataLength, bytesPerPixel, paddingAmount);
@@ -16,7 +15,6 @@ Bitmap::Bitmap(size_t width, size_t height, size_t pixelDataLength, int bytesPer
     {
         Serial.println("Bitmap-> Padding NOT needed.");
     }
-    
 }
 
 void Bitmap::insertPadding(const uint8_t *rawPixelData, size_t pixelDataLength, int bytesPerPixel, size_t paddingAmount, size_t width, size_t height)
@@ -50,7 +48,9 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
     const int fileHeaderSize = 14;
     const int informationHeaderSize = 40;
 
-    const int fileSize = fileHeaderSize + informationHeaderSize + width * height * bytesPerPixel + pixelDataLength + paddingAmount * height;
+    const int fileSize = fileHeaderSize + informationHeaderSize + (int(width) * int(height) * bytesPerPixel) + (paddingAmount * int(height));
+
+    int numberOfColours = bytesPerPixel == 1 ? 256 : 0;
 
     uint8_t fileHeader[fileHeaderSize];
 
@@ -82,27 +82,27 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
     informationHeader[2] = 0;
     informationHeader[3] = 0;
     // Image width
-    informationHeader[4] = width;
-    informationHeader[5] = width >> 8;
-    informationHeader[6] = width >> 16;
-    informationHeader[7] = width >> 24;
+    informationHeader[4] = width; //18
+    informationHeader[5] = width >> 8; //19
+    informationHeader[6] = width >> 16; //20
+    informationHeader[7] = width >> 24; //21
     // Image hieght
-    informationHeader[4] = height;
-    informationHeader[5] = height >> 8;
-    informationHeader[6] = height >> 16;
-    informationHeader[7] = height >> 24;
+    informationHeader[8] = height; //22
+    informationHeader[9] = height >> 8; //23
+    informationHeader[10] = height >> 16; //24
+    informationHeader[11] = height >> 24; //25
     // Planes
     informationHeader[12] = 1;
     informationHeader[13] = 0;
     // Bits per pixel
-    informationHeader[14] = bytesPerPixel;
+    informationHeader[14] = bytesPerPixel * 8;
     informationHeader[15] = 0;
-    // Compression (no compreession)
+    // Compression (no compression)
     informationHeader[16] = 0;
     informationHeader[17] = 0;
     informationHeader[18] = 0;
     informationHeader[19] = 0;
-    // Image size (no compreession)
+    // Image size (no compression)
     informationHeader[20] = 0;
     informationHeader[21] = 0;
     informationHeader[22] = 0;
@@ -118,17 +118,15 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
     informationHeader[30] = 0;
     informationHeader[31] = 0;
     // Total colors
-    informationHeader[32] = 0;
-    informationHeader[33] = 0;
-    informationHeader[34] = 0;
-    informationHeader[35] = 0;
+    informationHeader[32] = numberOfColours;
+    informationHeader[33] = numberOfColours >> 8; 
+    informationHeader[34] = numberOfColours >> 16;     
+    informationHeader[35] = numberOfColours >> 24;
     // Important colors
     informationHeader[36] = 0;
     informationHeader[37] = 0;
     informationHeader[38] = 0;
     informationHeader[39] = 0;
-
-    m_bitmapHeader[fileHeaderSize + informationHeaderSize];
 
     int index = 0;
 
@@ -145,8 +143,6 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
     }
 
     m_bitmapHeaderPointer = &m_bitmapHeader[0];
-
-    size_t length = fileHeaderSize + informationHeaderSize;
 
 
 }

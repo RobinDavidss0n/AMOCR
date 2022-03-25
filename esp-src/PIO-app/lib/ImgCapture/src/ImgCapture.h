@@ -25,6 +25,7 @@ private:
     bool saveImage();
     bool saveAsBitmap();
     bool saveAsRawPixelData();
+    bool configSensor();
 public:
     ImgCapture(pixformat_t pixFormat, framesize_t frameSize, int jpgQuality = 10, size_t fbCount = 2);
     ~ImgCapture();
