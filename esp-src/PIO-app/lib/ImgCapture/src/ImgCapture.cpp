@@ -2,8 +2,12 @@
 #include <string>
 #include <sstream>
 
-ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int jpgQuality, size_t fbCount)
+//fbCount 1 for all except jpg wich it should be 2
+ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int brightness, int contrast, int jpgQuality, size_t fbCount)
 {
+
+    m_brightness = brightness;
+    m_contrast = contrast;
 
     fb = NULL;
     camConfig = new CameraConfig(pixFormat, frameSize, jpgQuality, fbCount);
@@ -11,6 +15,7 @@ ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String file
 
     if (!psramFound())
     {
+        Serial.println("ImgCapture-> psramFound not found!");
         frameSize = FRAMESIZE_SVGA;
         jpgQuality = 12;
         fbCount = 1;
@@ -46,7 +51,7 @@ String ImgCapture::captureImage()
 
     if (initCamera())
     {   
-        camConfig->configSensor();
+        camConfig->configSensor(m_brightness, m_contrast);
 
         pinMode(4, OUTPUT);    // Set the pin as output
         digitalWrite(4, HIGH); // Turn on flash
@@ -132,7 +137,7 @@ bool ImgCapture::saveAsBitmap()
 
     Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->m_bytesPerPixel, fb->buf);
 
-    Serial.println("fb->width"+String(fb->width) +"fb->height: " + String(fb->height));
+    Serial.println("fb->width"+String(fb->width) +"\nfb->height: " + String(fb->height)+ "\ncamConfig->m_bytesPerPixel: " + String(camConfig->m_bytesPerPixel));
 
     SdCardStorage sdStorage;
 

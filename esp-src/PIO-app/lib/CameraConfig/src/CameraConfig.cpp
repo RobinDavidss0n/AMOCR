@@ -42,15 +42,19 @@ camera_config_t CameraConfig::getCamConfig()
 
 void CameraConfig::setFileFormat(String fileFormat)
 {
+    //Serial.println("setFileFormat -> fileformat: " + fileFormat);
+
     m_fileFormat = fileFormat;
 
     switch (config.pixel_format)
     {
     case PIXFORMAT_RGB888:
         m_bytesPerPixel = 3;
+        break;
 
     case PIXFORMAT_GRAYSCALE:
         m_bytesPerPixel = 1;
+        break;
     }
 }
 
@@ -60,11 +64,11 @@ String CameraConfig::getImgFormat()
 }
 
 
-// ONLY DO AFTER CAMERA INIT
-bool CameraConfig::configSensor() {
+// ONLY DO AFTER CAMERA INIT, brightness & contrast: -2 to 2 
+bool CameraConfig::configSensor(int brightness, int contrast) {
     sensor_t * s = esp_camera_sensor_get();
-    s->set_brightness(s, -1);     // -2 to 2
-    s->set_contrast(s, 1);       // -2 to 2
+    s->set_brightness(s, brightness);     // -2 to 2
+    s->set_contrast(s, contrast);       // -2 to 2
     s->set_saturation(s, 0);     // -2 to 2
     s->set_special_effect(s, 0); // 0 to 6 (0 - No Effect, 1 - Negative, 2 - Grayscale, 3 - Red Tint, 4 - Green Tint, 5 - Blue Tint, 6 - Sepia)
     s->set_whitebal(s, 1);       // 0 = disable , 1 = enable

@@ -1,23 +1,23 @@
 #include "bitmap.h"
 
-Bitmap::Bitmap(size_t width, size_t height, size_t pixelDataLength, int m_bytesPerPixel, const uint8_t *rawPixelData)
+Bitmap::Bitmap(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, const uint8_t *rawPixelData)
 {
-    const int paddingAmount = ((4 - (int(width) * m_bytesPerPixel) % 4) % 4);
+    const int paddingAmount = ((4 - (int(width) * bytesPerPixel) % 4) % 4);
     unsigned char bmpPad[3] = {0,0,0};
 
-    createBitmapHeader(width, height, pixelDataLength, m_bytesPerPixel, paddingAmount);
+    createBitmapHeader(width, height, pixelDataLength, bytesPerPixel, paddingAmount);
 
     if (paddingAmount > 0)
     {
         Serial.println("Bitmap-> Padding needed, ammount: " + paddingAmount);
-        insertPadding(rawPixelData, pixelDataLength, m_bytesPerPixel, paddingAmount, width, height);
+        insertPadding(rawPixelData, pixelDataLength, bytesPerPixel, paddingAmount, width, height);
     }else
     {
         Serial.println("Bitmap-> Padding NOT needed.");
     }
 }
 
-void Bitmap::insertPadding(const uint8_t *rawPixelData, size_t pixelDataLength, int m_bytesPerPixel, size_t paddingAmount, size_t width, size_t height)
+void Bitmap::insertPadding(const uint8_t *rawPixelData, size_t pixelDataLength, int bytesPerPixel, size_t paddingAmount, size_t width, size_t height)
 {
 
     for (size_t index = 0; index < pixelDataLength; index++)
@@ -42,15 +42,15 @@ void Bitmap::insertPadding(const uint8_t *rawPixelData, size_t pixelDataLength, 
     }
 }
 
-void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLength, int m_bytesPerPixel, int paddingAmount)
+void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, int paddingAmount)
 {
 
     const int fileHeaderSize = 14;
     const int informationHeaderSize = 40;
 
-    const int fileSize = fileHeaderSize + informationHeaderSize + (int(width) * int(height) * m_bytesPerPixel) + (paddingAmount * int(height));
+    const int fileSize = fileHeaderSize + informationHeaderSize + (int(width) * int(height) * bytesPerPixel) + (paddingAmount * int(height));
 
-    int numberOfColours = m_bytesPerPixel == 1 ? 256 : 0;
+    int numberOfColours = bytesPerPixel == 1 ? 256 : 0;
 
     uint8_t fileHeader[fileHeaderSize];
 
@@ -95,7 +95,7 @@ void Bitmap::createBitmapHeader(size_t width, size_t height, size_t pixelDataLen
     informationHeader[12] = 1;
     informationHeader[13] = 0;
     // Bits per pixel
-    informationHeader[14] = m_bytesPerPixel * 8;
+    informationHeader[14] = bytesPerPixel * 8;
     informationHeader[15] = 0;
     // Compression (no compression)
     informationHeader[16] = 0;

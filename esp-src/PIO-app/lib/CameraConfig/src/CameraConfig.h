@@ -1,5 +1,6 @@
 #include "esp_camera.h"
 #include "WString.h"
+#include "FS.h"
 
 /**************************** Define the number of bytes to access ****************************/
 #define EEPROM_SIZE 1
@@ -38,8 +39,8 @@ public:
     
     camera_config_t getCamConfig();
     String getImgFormat();
-    void setFileFormat(String);
-    bool configSensor();
+    void setFileFormat(String fileFormat);
+    bool configSensor(int brightness, int contrast);
 
     size_t m_bytesPerPixel;
     String m_fileFormat;

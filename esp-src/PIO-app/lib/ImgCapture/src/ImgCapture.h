@@ -20,6 +20,8 @@ private:
     CameraConfig* camConfig = nullptr;
     camera_config_t config;
     camera_fb_t* fb;
+    int m_brightness = 0;
+    int m_contrast = 0;
 
     bool initCamera();
     bool saveImage();
@@ -27,7 +29,8 @@ private:
     bool saveAsRawPixelData();
 
 public:
-    ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int jpgQuality = 10, size_t fbCount = 2);
+    
+    ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int brightness = 0, int contrast = 0, int jpgQuality = 0, size_t fbCount = 1);
     ~ImgCapture();
 
     String captureImage();

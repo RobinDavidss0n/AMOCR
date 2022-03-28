@@ -114,6 +114,8 @@ bool SdCardStorage::writeBitmapFile(String path, const uint8_t *headerData, size
     }
     else
     {
+        Serial.println("writeBitmapFile -> headerDataLength: "+ String(headerDataLength));
+        Serial.println("writeBitmapFile -> headerDataLength: "+ String(pixelDatatLength));
         file.write(headerData, headerDataLength);
         file.write(pixelDatat, pixelDatatLength);
         file.close();

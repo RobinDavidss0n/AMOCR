@@ -11,10 +11,13 @@ void setup()
     //InternalStorage internalStorage;
     //internalStorage.resetImageNumber();
 
+    int brightness = -2;
+    int contrast = 0;
+
     // ImgCapture imgCapture1(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
     // imgCapture.captureImage();
 
-    ImgCapture imgCapture(PIXFORMAT_RGB888, FRAMESIZE_SVGA, ".bin");
+    ImgCapture imgCapture(PIXFORMAT_RGB888, FRAMESIZE_SVGA, ".bin", brightness, contrast);
     imgCapture.captureImage();
 
     Serial.println("Going to sleep now");
