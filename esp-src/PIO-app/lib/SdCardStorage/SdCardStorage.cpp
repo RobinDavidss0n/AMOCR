@@ -51,6 +51,9 @@ bool SdCardStorage::writeTxtFile(String path, String text)
 
 bool SdCardStorage::writeRawPixelDataToBinFile(String path, const uint8_t *rawPixelData, size_t rpdLength)
 {
+
+    Serial.println("writeRawPixelDataToBinFile -> rpdLength: "+ String(rpdLength));
+
     File file = m_fileStream.open(path, FILE_WRITE);
 
     if (!file)

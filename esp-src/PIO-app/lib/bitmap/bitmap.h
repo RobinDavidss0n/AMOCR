@@ -9,11 +9,11 @@ class Bitmap{
 
 private:
 
-    void createBitmapHeader(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, int paddingAmount);
-    void insertPadding(const uint8_t* rawPixelData, size_t pixelDataLength, int bytesPerPixel, size_t paddingAmount, size_t width, size_t height);
+    void createBitmapHeader(size_t width, size_t height, size_t pixelDataLength, int m_bytesPerPixel, int paddingAmount);
+    void insertPadding(const uint8_t* rawPixelData, size_t pixelDataLength, int m_bytesPerPixel, size_t paddingAmount, size_t width, size_t height);
     
 public:
-    Bitmap(size_t width, size_t height, size_t pixelDataLength, int bytesPerPixel, const uint8_t* rawPixelData);
+    Bitmap(size_t width, size_t height, size_t pixelDataLength, int m_bytesPerPixel, const uint8_t* rawPixelData);
     ~Bitmap();
 
     size_t m_length = 54;

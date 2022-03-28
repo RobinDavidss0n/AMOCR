@@ -38,8 +38,11 @@ public:
     
     camera_config_t getCamConfig();
     String getImgFormat();
+    void setFileFormat(String);
+    bool configSensor();
 
-    size_t bytesPerPixel;
+    size_t m_bytesPerPixel;
+    String m_fileFormat;
 
 };
 
