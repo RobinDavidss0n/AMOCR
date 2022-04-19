@@ -12,7 +12,7 @@ void setup()
     //internalStorage.resetImageNumber();
 
     int brightness = -2;
-    int contrast = 0;
+    int contrast = 2;
 
     // ImgCapture imgCapture1(PIXFORMAT_GRAYSCALE, FRAMESIZE_UXGA);
     // imgCapture.captureImage();

@@ -54,7 +54,8 @@ String ImgCapture::captureImage()
         camConfig->configSensor(m_brightness, m_contrast);
 
         pinMode(4, OUTPUT);    // Set the pin as output
-        digitalWrite(4, HIGH); // Turn on flash
+        // digitalWrite(4, HIGH); // Turn on flash
+        digitalWrite(4, LOW); // Turn off flash
 
         // Take Picture with Camera
         fb = esp_camera_fb_get();
