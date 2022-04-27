@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 
-//fbCount 1 for all except jpg wich it should be 2
+// fbCount 1 for all except jpg wich it should be 2
 ImgCapture::ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int brightness, int contrast, int jpgQuality, size_t fbCount)
 {
 
@@ -43,20 +43,49 @@ bool ImgCapture::initCamera()
     return true;
 }
 
-String ImgCapture::captureImage()
+String ImgCapture::captureImage(bool camInit)
 {
 
     ErrorHandler errorHandler;
     InternalStorage internalStorage;
 
-    if (initCamera())
-    {   
-        camConfig->configSensor(m_brightness, m_contrast);
+    if (!camInit)
+    {
+        if (initCamera())
+        {
+            camConfig->configSensor(m_brightness, m_contrast);
 
-        pinMode(4, OUTPUT);    // Set the pin as output
+            pinMode(4, OUTPUT); // Set the pin as output
+            // digitalWrite(4, HIGH); // Turn on flash
+            digitalWrite(4, LOW); // Turn off flash
+
+            // Take Picture with Camera
+            fb = esp_camera_fb_get();
+
+            if (!fb)
+            {
+                errorHandler.handleError("Camera capture failed", NULL, "ErrorFile_" + internalStorage.getImageNumber());
+                internalStorage.updateImageNumber();
+                return String("");
+            }
+
+            saveImage();
+            esp_camera_fb_return(fb);
+
+            digitalWrite(4, LOW); // Turn off flash
+        }
+        else
+        {
+            errorHandler.handleError("Camera init failed", NULL, "ErrorFile_" + internalStorage.getImageNumber());
+        }
+
+        internalStorage.updateImageNumber();
+    }
+    else
+    {
+        pinMode(4, OUTPUT); // Set the pin as output
         // digitalWrite(4, HIGH); // Turn on flash
         digitalWrite(4, LOW); // Turn off flash
-
         // Take Picture with Camera
         fb = esp_camera_fb_get();
 
@@ -67,15 +96,10 @@ String ImgCapture::captureImage()
             return String("");
         }
 
-        digitalWrite(4, LOW); // Turn off flash
-
         saveImage();
+        esp_camera_fb_return(fb);
     }
-    else
-    {
-        errorHandler.handleError("Camera init failed", NULL, "ErrorFile_" + internalStorage.getImageNumber());
-        internalStorage.updateImageNumber();
-    }
+
 
     return m_imgPath;
 }
@@ -88,7 +112,7 @@ bool ImgCapture::saveImage()
     if (fileFormat == ".bmp")
     {
         saveAsBitmap();
-        //saveAsRawPixelData();
+        // saveAsRawPixelData();
     }
     else if (fileFormat == ".bin")
     {
@@ -116,14 +140,13 @@ bool ImgCapture::saveAsRawPixelData()
     internalStorage.updateImageNumber();
 
     Serial.println("Picture file name: " + m_imgPath);
-    Serial.println("fb->width: "+String(fb->width) +"\nfb->height: " + String(fb->height));
+    Serial.println("fb->width: " + String(fb->width) + "\nfb->height: " + String(fb->height));
 
-    //Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->m_bytesPerPixel, fb->buf);
+    // Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->m_bytesPerPixel, fb->buf);
 
     SdCardStorage sdStorage;
     sdStorage.writeRawPixelDataToBinFile(m_imgPath, fb->buf, fb->len);
 }
-
 
 //**********************************    NOT USED    **********************************
 
@@ -138,7 +161,7 @@ bool ImgCapture::saveAsBitmap()
 
     Bitmap bitmap(fb->width, fb->height, fb->len, camConfig->m_bytesPerPixel, fb->buf);
 
-    Serial.println("fb->width"+String(fb->width) +"\nfb->height: " + String(fb->height)+ "\ncamConfig->m_bytesPerPixel: " + String(camConfig->m_bytesPerPixel));
+    Serial.println("fb->width" + String(fb->width) + "\nfb->height: " + String(fb->height) + "\ncamConfig->m_bytesPerPixel: " + String(camConfig->m_bytesPerPixel));
 
     SdCardStorage sdStorage;
 

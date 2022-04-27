@@ -33,7 +33,7 @@ public:
     ImgCapture(pixformat_t pixFormat, framesize_t frameSize, String fileFormat, int brightness = 0, int contrast = 0, int jpgQuality = 0, size_t fbCount = 1);
     ~ImgCapture();
 
-    String captureImage();
+    String captureImage(bool initCam);
 };
 
 #endif // IMGCAPTURE_H

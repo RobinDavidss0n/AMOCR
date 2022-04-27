@@ -8,8 +8,8 @@ void setup()
 
     Serial.begin(115200);
 
-    // InternalStorage internalStorage;
-    // internalStorage.resetImageNumber();
+    InternalStorage internalStorage;
+    internalStorage.resetImageNumber();
 
     int brightness = -2;
     int contrast = 2;
@@ -18,14 +18,17 @@ void setup()
     // imgCapture.captureImage();
 
     int counter = 0;
+    bool init = false;
 
-    while (counter < 5)
+    while (counter < 1)
     {
         ImgCapture imgCapture(PIXFORMAT_RGB888, FRAMESIZE_SVGA, ".bin", brightness, contrast);
-        imgCapture.captureImage();
+        imgCapture.captureImage(init);
 
         counter += 1;
-        Serial.println('counter: %d', counter);
+        init = true;
+        Serial.println("counter:");
+        Serial.println(counter);
     }
 
     Serial.println("Going to sleep now");
