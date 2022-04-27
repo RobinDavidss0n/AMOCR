@@ -20,7 +20,7 @@ void setup()
     int counter = 0;
     bool init = false;
 
-    while (counter < 1)
+    while (counter < 5)
     {
         ImgCapture imgCapture(PIXFORMAT_RGB888, FRAMESIZE_SVGA, ".bin", brightness, contrast);
         imgCapture.captureImage(init);

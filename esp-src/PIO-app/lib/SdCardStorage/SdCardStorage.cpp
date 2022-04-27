@@ -19,6 +19,7 @@ SdCardStorage::SdCardStorage()
 
 SdCardStorage::~SdCardStorage()
 {
+    SD_MMC.end();
 }
 
 bool SdCardStorage::writeTxtFile(String path, String text)
